@@ -1,0 +1,47 @@
+import mongoose from "mongoose";
+
+const roomSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      default: "Room",
+    },
+
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    quiz: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz",
+    },
+
+    roomCode: {
+      type: String, // e.g. random 6-digit code
+      unique: true,
+    },
+
+    maxPlayers: {
+      type: Number,
+      default: 10,
+    },
+
+    status: {
+      type: String,
+      enum: ["waiting", "in-progress", "ended"],
+      default: "waiting",
+    },
+  },
+  { timestamps: true }
+);
+
+export const Room = mongoose.model("Room", roomSchema);

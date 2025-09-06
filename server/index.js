@@ -18,6 +18,7 @@ app.get("/test", (req, res) => {
   });
 });
 
+// user routes
 app.use("/user", userRouter);
 
 app.listen(PORT, () => {
