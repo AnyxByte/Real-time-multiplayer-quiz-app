@@ -8,6 +8,7 @@ import Login from "./pages/login/login.jsx";
 import Signup from "./pages/signup/signup.jsx";
 import App from "./App.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
+import CreateQuestion from "./pages/dashboard/questions/createQuestion.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/dashboard/createQuestion",
+    element: <CreateQuestion />,
   },
 ]);
 
