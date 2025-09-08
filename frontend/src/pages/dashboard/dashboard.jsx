@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Home,
   Users,
@@ -15,10 +14,12 @@ import Question from "./questions/question";
 import Leaderboard from "./leaderboard/leaderboard";
 import DashboardSettings from "./settings/settings";
 import Sidebar from "./sidebar/sidebar";
+import { Outlet } from "react-router";
+import { useDashboard } from "../../context/DashboardContext";
+import CreateQuestion from "./questions/createQuestion";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("rooms");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { activeTab, sidebarOpen, setSidebarOpen } = useDashboard();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -28,6 +29,8 @@ export default function Dashboard() {
         return <Quiz />;
       case "questions":
         return <Question />;
+      case "createQuestion":
+        return <CreateQuestion />;
       case "leaderboard":
         return <Leaderboard />;
       case "settings":
@@ -48,7 +51,7 @@ export default function Dashboard() {
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Sidebar />
       </div>
 
       {/* Overlay for Mobile */}
@@ -73,6 +76,9 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <main className="p-6 overflow-y-auto">{renderContent()}</main>
+        <div>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import {
   Trophy,
   Settings,
 } from "lucide-react";
+import { useDashboard } from "../../../context/DashboardContext";
 
 const SidebarButton = ({ setActiveTab, activeTab, icon, title }) => {
   return (
@@ -21,7 +22,9 @@ const SidebarButton = ({ setActiveTab, activeTab, icon, title }) => {
   );
 };
 
-export default function Sidebar({ activeTab, setActiveTab }) {
+export default function Sidebar() {
+  const { activeTab, setActiveTab } = useDashboard();
+
   return (
     <aside className="w-64 h-full bg-gradient-to-b from-indigo-600 to-purple-600 text-white flex flex-col justify-between">
       <div>

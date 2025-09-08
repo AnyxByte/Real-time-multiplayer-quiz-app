@@ -9,6 +9,7 @@ import Signup from "./pages/signup/signup.jsx";
 import App from "./App.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import CreateQuestion from "./pages/dashboard/questions/createQuestion.jsx";
+import { DashboardProvider } from "./context/DashboardContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,11 +26,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/dashboard/createQuestion",
-    element: <CreateQuestion />,
+    element: (
+      <DashboardProvider>
+        <Dashboard />
+      </DashboardProvider>
+    ),
   },
 ]);
 
