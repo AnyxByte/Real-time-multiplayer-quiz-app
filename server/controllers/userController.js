@@ -32,6 +32,7 @@ export const handleRegister = async (req, res) => {
     });
   } catch (error) {
     console.log("error in create user");
+    console.log(error);
 
     return res.status(500).json({
       msg: "server error",

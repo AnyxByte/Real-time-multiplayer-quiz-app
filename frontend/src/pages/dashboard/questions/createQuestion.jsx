@@ -61,7 +61,7 @@ export default function CreateQuestion() {
           {options.map((option, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 p-3  rounded-lg hover:bg-gray-50 transition"
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition"
             >
               <Input
                 type="text"

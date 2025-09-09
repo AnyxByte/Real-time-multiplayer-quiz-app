@@ -8,8 +8,8 @@ import Login from "./pages/login/login.jsx";
 import Signup from "./pages/signup/signup.jsx";
 import App from "./App.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
-import CreateQuestion from "./pages/dashboard/questions/createQuestion.jsx";
 import { DashboardProvider } from "./context/DashboardContext.jsx";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -37,5 +37,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <Toaster position="top-center" richColors duration={1000} />
   </StrictMode>
 );
