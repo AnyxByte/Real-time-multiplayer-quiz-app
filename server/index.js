@@ -2,7 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./connectDb.js";
 import userRouter from "./routes/userRoute.js";
+import questionRouter from "./routes/questionRoute.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import { auth } from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -15,7 +18,9 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
+app.use(cookieParser());
 
 await connectDb();
 
@@ -27,7 +32,7 @@ app.get("/test", (req, res) => {
 
 // user routes
 app.use("/api/user", userRouter);
-// app.use("api/question" , auth ,  questionRouter)
+app.use("api/question", auth, questionRouter);
 
 app.listen(PORT, () => {
   console.log("server listening to port ", PORT);
