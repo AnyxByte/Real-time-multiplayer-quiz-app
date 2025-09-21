@@ -34,7 +34,7 @@ app.get("/test", (req, res) => {
 // user routes
 app.use("/api/user", userRouter);
 app.use("/api/question", auth, questionRouter);
-app.use("/talkToAI", auth, aiRouter);
+app.use("/api/talkToAI", auth, aiRouter);
 
 app.listen(PORT, () => {
   console.log("server listening to port ", PORT);

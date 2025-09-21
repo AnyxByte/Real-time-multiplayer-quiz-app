@@ -56,7 +56,7 @@ export async function deleteQuestion(req, res) {
 
     await Question.findByIdAndDelete(id);
 
-    return res.status(201).json({
+    return res.status(200).json({
       msg: "deleted successfully",
     });
   } catch (error) {

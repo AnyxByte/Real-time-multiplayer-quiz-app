@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Spinner from "./Spinner";
 import AIButton from "./AIButton";
 import AIInput from "./AIInput";
+import Cookies from "js-cookie";
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([
@@ -15,6 +16,7 @@ const Chatbox = () => {
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSend = async (e) => {
+    const token = Cookies.get("token");
     e.preventDefault();
     setLoading(true);
     if (input.trim() === "") return;
@@ -23,9 +25,17 @@ const Chatbox = () => {
     setInput("");
 
     try {
-      const response = await axios.post(`${apiUrl}/talkToAI`, {
-        prompt: input,
-      });
+      const response = await axios.post(
+        `${apiUrl}/talkToAI`,
+        {
+          prompt: input,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const newAIResponse = { sender: "ai", text: response.data.output };
       setMessages((prev) => [...prev, newAIResponse]);

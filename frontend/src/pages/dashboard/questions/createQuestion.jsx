@@ -15,6 +15,7 @@ import { Bot } from "lucide-react";
 import Chatbox from "@/components/custom/chatbox";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function CreateQuestion() {
   const { register, handleSubmit, control } = useForm();
@@ -39,8 +40,10 @@ export default function CreateQuestion() {
       });
       setActiveTab("questions");
       setQuestions((q) => [...q, response.data.question]);
+      toast.success("Created");
     } catch (error) {
       console.log(error);
+      toast.error("Failed");
     }
   };
 

@@ -3,6 +3,6 @@ import { aiController } from "../controllers/aiController.js";
 
 const router = express.Router();
 
-router.get("/", aiController);
+router.post("/", aiController);
 
 export default router;

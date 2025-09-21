@@ -15,8 +15,8 @@ export default function DisplayQuestion({ questions, deleteQuestion }) {
             >
               <span>{q.title}</span>
               <button
-                onClick={() => deleteQuestion(q.id)}
-                className="text-red-500 hover:text-red-700"
+                onClick={() => deleteQuestion(q._id)}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
               >
                 <Trash2 size={18} />
               </button>

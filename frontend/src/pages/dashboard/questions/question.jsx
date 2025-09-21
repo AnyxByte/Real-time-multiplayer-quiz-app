@@ -1,19 +1,36 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
-import { useDashboard } from "../../../context/DashboardContext";
+import { useDashboard } from "@/context/DashboardContext";
 import DisplayQuestion from "./displayQuestion";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function Question() {
   const { setActiveTab, questions, setQuestions } = useDashboard();
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const addQuestion = () => {
     setActiveTab("createQuestion");
   };
 
-  const deleteQuestion = (id) => {
-    setQuestions(questions.filter((q) => q.id !== id));
+  const deleteQuestion = async (id) => {
+    const token = Cookies.get("token");
+    try {
+      await axios.delete(`${apiUrl}/question/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setQuestions((q) => q.filter((q) => q._id !== id));
+      toast.success("Deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed");
+    }
   };
 
   return (
@@ -30,14 +47,12 @@ export default function Question() {
         </Button>
       </div>
 
-      <>
-        <div>
-          <DisplayQuestion
-            questions={questions}
-            deleteQuestion={deleteQuestion}
-          />
-        </div>
-      </>
+      <div>
+        <DisplayQuestion
+          questions={questions}
+          deleteQuestion={deleteQuestion}
+        />
+      </div>
     </div>
   );
 }
