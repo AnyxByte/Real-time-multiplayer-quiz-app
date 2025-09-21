@@ -10,10 +10,10 @@ export default function DisplayQuestion({ questions, deleteQuestion }) {
         <ul className="space-y-3">
           {questions.map((q) => (
             <li
-              key={q.id}
+              key={q._id}
               className="flex justify-between items-center p-4 bg-white rounded-lg shadow border"
             >
-              <span>{q.text}</span>
+              <span>{q.title}</span>
               <button
                 onClick={() => deleteQuestion(q.id)}
                 className="text-red-500 hover:text-red-700"

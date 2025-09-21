@@ -20,7 +20,7 @@ const questionSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (val) {
-        return val >= 0 && val < this.options.length;
+        return val > 0 && val <= this.options.length;
       },
       message: "answer should not be more than options length",
     },

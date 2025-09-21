@@ -76,9 +76,9 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <main className="p-6 overflow-y-auto">{renderContent()}</main>
-        <div>
+        {/* <div>
           <Outlet />
-        </div>
+        </div> */}
       </div>
     </div>
   );

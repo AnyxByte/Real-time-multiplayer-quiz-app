@@ -12,6 +12,7 @@ const Chatbox = () => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ const Chatbox = () => {
     setInput("");
 
     try {
-      const response = await axios.post(`api/talkToAI`, {
+      const response = await axios.post(`${apiUrl}/talkToAI`, {
         prompt: input,
       });
 

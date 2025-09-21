@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { useDashboard } from "../../../context/DashboardContext";
@@ -5,13 +6,7 @@ import DisplayQuestion from "./displayQuestion";
 import { Button } from "../../../components/ui/button";
 
 export default function Question() {
-  const { setActiveTab } = useDashboard();
-
-  const [questions, setQuestions] = useState([
-    { id: 1, text: "What is the capital of France?" },
-    { id: 2, text: "Who developed the theory of relativity?" },
-    { id: 3, text: "What is 2 + 2?" },
-  ]);
+  const { setActiveTab, questions, setQuestions } = useDashboard();
 
   const addQuestion = () => {
     setActiveTab("createQuestion");
@@ -35,12 +30,14 @@ export default function Question() {
         </Button>
       </div>
 
-      <div>
-        <DisplayQuestion
-          questions={questions}
-          deleteQuestion={deleteQuestion}
-        />
-      </div>
+      <>
+        <div>
+          <DisplayQuestion
+            questions={questions}
+            deleteQuestion={deleteQuestion}
+          />
+        </div>
+      </>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDb } from "./connectDb.js";
 import userRouter from "./routes/userRoute.js";
 import questionRouter from "./routes/questionRoute.js";
+import aiRouter from "./routes/aiRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { auth } from "./middleware/auth.js";
@@ -32,7 +33,8 @@ app.get("/test", (req, res) => {
 
 // user routes
 app.use("/api/user", userRouter);
-app.use("api/question", auth, questionRouter);
+app.use("/api/question", auth, questionRouter);
+app.use("/talkToAI", auth, aiRouter);
 
 app.listen(PORT, () => {
   console.log("server listening to port ", PORT);

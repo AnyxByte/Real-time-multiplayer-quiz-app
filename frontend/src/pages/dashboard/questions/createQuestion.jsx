@@ -13,15 +13,35 @@ import {
 } from "@/components/ui/dialog";
 import { Bot } from "lucide-react";
 import Chatbox from "@/components/custom/chatbox";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function CreateQuestion() {
   const { register, handleSubmit, control } = useForm();
-  const { setActiveTab } = useDashboard();
+  const { setActiveTab, setQuestions } = useDashboard();
   const options = [1, 2, 3];
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // handle save here
+  const onSubmit = async (data) => {
+    const token = Cookies.get("token");
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    try {
+      let options = [data.option1, data.option2, data.option3];
+      const payload = {
+        title: data.title,
+        options,
+        ansIndex: data.ansIndex,
+      };
+
+      const response = await axios.post(`${apiUrl}/question/create`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setActiveTab("questions");
+      setQuestions((q) => [...q, response.data.question]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
