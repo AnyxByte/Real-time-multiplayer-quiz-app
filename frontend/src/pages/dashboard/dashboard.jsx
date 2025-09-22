@@ -17,6 +17,7 @@ import Sidebar from "./sidebar/sidebar";
 import { Outlet } from "react-router";
 import { useDashboard } from "../../context/DashboardContext";
 import CreateQuestion from "./questions/createQuestion";
+import CreateQuiz from "./quizzes/createQuiz";
 
 export default function Dashboard() {
   const { activeTab, sidebarOpen, setSidebarOpen } = useDashboard();
@@ -31,6 +32,8 @@ export default function Dashboard() {
         return <Question />;
       case "createQuestion":
         return <CreateQuestion />;
+      case "createQuiz":
+        return <CreateQuiz />;
       case "leaderboard":
         return <Leaderboard />;
       case "settings":

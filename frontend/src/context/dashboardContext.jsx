@@ -11,6 +11,7 @@ export const DashboardProvider = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [questions, setQuestions] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -29,6 +30,22 @@ export const DashboardProvider = ({ children }) => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
+  const fetchQuizzes = async () => {
+    const token = Cookies.get("token");
+    try {
+      const response = await axios.get(`${apiUrl}/quiz`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      setQuizzes(response.data.quizzes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchQuestions();
   }, []);
@@ -42,6 +59,8 @@ export const DashboardProvider = ({ children }) => {
         setSidebarOpen,
         questions,
         setQuestions,
+        quizzes,
+        setQuizzes,
       }}
     >
       {children}
