@@ -48,6 +48,7 @@ export const DashboardProvider = ({ children }) => {
 
   useEffect(() => {
     fetchQuestions();
+    fetchQuizzes();
   }, []);
 
   return (

@@ -1,9 +1,64 @@
 import { useDashboard } from "@/context/DashboardContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import QuestionAddComponent from "./questionAddComponent";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function CreateQuiz() {
   const { questions, setActiveTab } = useDashboard();
+  const [title, setTitle] = useState("");
+
+  const [questionList, setQuestionList] = useState([]);
+
+  const onChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const addQuestion = (q) => {
+    setQuestionList((prev) => [
+      ...prev,
+      {
+        title: q.title,
+        id: q._id,
+      },
+    ]);
+  };
+
+  const removeQuestion = (q) => {
+    setQuestionList((list) => list.filter((question) => question.id != q.id));
+  };
+
+  const handleCreateQuiz = async (e) => {
+    e.preventDefault();
+    const token = Cookies.get("token");
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    const idsOfQuestions = questionList.map((q) => q.id);
+
+    if (questionList.length === 0) return alert("Add some questions");
+    if (title.length === 0) return alert("add title");
+
+    try {
+      const payload = {
+        title,
+        questions: idsOfQuestions,
+      };
+
+      await axios.post(`${apiUrl}/quiz/create`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Created");
+      setActiveTab("quizzes");
+    } catch (error) {
+      toast.error("Failed");
+      console.log(error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -12,6 +67,8 @@ export default function CreateQuiz() {
         </h1>
 
         <Input
+          value={title}
+          onChange={onChange}
           id="title"
           type="text"
           placeholder="Enter quiz title..."
@@ -20,55 +77,33 @@ export default function CreateQuiz() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Available Questions */}
-          <div className="bg-white rounded-xl shadow p-4 space-y-4">
-            <h2 className="text-lg font-semibold">Available Questions</h2>
-            <div
-              className="max-h-[350px] md:max-h-[450px] overflow-y-auto space-y-3 
-                            scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
-            >
-              {[...questions].map((q, i) => (
-                <div
-                  key={i}
-                  className="p-3 border rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
-                >
-                  <p className="text-sm md:text-base flex-1">
-                    Question {i + 1}: {q.title}
-                  </p>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="bg-indigo-600 text-white hover:bg-indigo-700 "
-                  >
-                    Add
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
+
+          <QuestionAddComponent
+            className="bg-indigo-600 text-white hover:text-white hover:bg-indigo-700"
+            heading="Available Questions"
+            list={questions}
+            purpose="Add"
+            task={addQuestion}
+          />
 
           {/* Selected Questions */}
-          <div className="bg-white rounded-xl shadow p-4 space-y-4">
-            <h2 className="text-lg font-semibold">Selected Questions</h2>
-            <div
-              className="min-h-[100px] max-h-[350px] md:max-h-[450px] overflow-y-auto space-y-3 
-                            scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
-            >
-              {/* Example selected */}
-              <div className="p-3 border rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <p className="text-sm md:text-base flex-1">
-                  Question 2: Example selected
-                </p>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="text-white"
-                >
-                  Remove
-                </Button>
-              </div>
+
+          {questionList.length === 0 ? (
+            <div className="text-muted-foreground text-center">
+              No questions added
             </div>
-          </div>
+          ) : (
+            <>
+              <QuestionAddComponent
+                className="text-white"
+                purpose="Remove"
+                list={questionList}
+                heading="Selected Questions"
+                variant="destructive"
+                task={removeQuestion}
+              />
+            </>
+          )}
         </div>
 
         {/* Submit */}
@@ -84,6 +119,7 @@ export default function CreateQuiz() {
           <Button
             type="submit"
             className="rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+            onClick={handleCreateQuiz}
           >
             Create
           </Button>
