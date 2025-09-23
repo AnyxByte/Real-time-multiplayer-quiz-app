@@ -1,3 +1,5 @@
+import { Trash2 } from "lucide-react";
+
 function DisplayQuiz({ quizzes, deleteQuiz }) {
   return (
     <div>
