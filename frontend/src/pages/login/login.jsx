@@ -20,7 +20,7 @@ export default function Login() {
     try {
       const response = await axios.post(`${apiUrl}/user/login`, data);
       Cookies.set("token", response.data.token, { expires: 1 });
-      toast.success("Registered successfully");
+      toast.success("Loggedin successfully");
       navigate("/dashboard");
     } catch (error) {
       console.log(error);

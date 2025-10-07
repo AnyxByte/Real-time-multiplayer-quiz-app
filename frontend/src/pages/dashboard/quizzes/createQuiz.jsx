@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 
 export default function CreateQuiz() {
-  const { questions, setActiveTab } = useDashboard();
+  const { questions, setActiveTab , setQuizzes } = useDashboard();
   const [title, setTitle] = useState("");
 
   const [questionList, setQuestionList] = useState([]);
@@ -46,12 +46,14 @@ export default function CreateQuiz() {
         questions: idsOfQuestions,
       };
 
-      await axios.post(`${apiUrl}/quiz/create`, payload, {
+      const response = await axios.post(`${apiUrl}/quiz/create`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data);
       toast.success("Created");
+      setQuizzes((quizzes)=>[...quizzes,response.data.quiz])
       setActiveTab("quizzes");
     } catch (error) {
       toast.error("Failed");
