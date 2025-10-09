@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import ParticipantLobby from "../quizRoom/lobby/ParticipantLobby";
 
 export default function Room() {
   return (

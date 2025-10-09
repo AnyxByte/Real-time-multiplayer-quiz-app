@@ -10,6 +10,7 @@ import App from "./App.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import { DashboardProvider } from "./context/DashboardContext.jsx";
 import { Toaster } from "sonner";
+import QuizRoom from "./pages/dashboard/quizRoom/QuizRoom.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ const router = createBrowserRouter([
     element: (
       <DashboardProvider>
         <Dashboard />
+      </DashboardProvider>
+    ),
+  },
+  {
+    path: "/room",
+    element: (
+      <DashboardProvider>
+        <QuizRoom />
       </DashboardProvider>
     ),
   },
