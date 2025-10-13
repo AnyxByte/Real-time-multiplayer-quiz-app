@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      default: "Room",
-    },
-
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,6 +22,7 @@ const roomSchema = new mongoose.Schema(
     roomCode: {
       type: String, // e.g. random 6-digit code
       unique: true,
+      required: true,
     },
 
     maxPlayers: {
