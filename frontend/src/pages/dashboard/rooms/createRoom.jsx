@@ -11,24 +11,22 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { useDashboard } from "@/context/DashboardContext";
 
 export default function CreateRoom() {
-  const options = [
-    {
-      value: 1,
-      label: "Leanne Graham",
-    },
-    {
-      value: 2,
-      label: "Ervin Howell",
-    },
-  ];
-
   const [values, setValues] = useState(null);
   const [maxPlayers, setMaxPlayers] = useState("");
-  
+
+  const { quizzes } = useDashboard();
+
+  const options = quizzes.map((q) => ({
+    title: q.title,
+    value: q._id,
+  }));
+
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 ">
+    <div className="-m-6 flex justify-center items-center min-h-screen">
       <Card className="w-full max-w-md p-6 shadow-xl bg-white border border-gray-200">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center text-gray-900">
@@ -66,6 +64,8 @@ export default function CreateRoom() {
               placeholder="Search and select a quiz..."
               options={options}
               onChange={(values) => setValues(values)}
+              labelField="title"
+              valueField="value"
             />
           </div>
         </CardContent>
