@@ -18,6 +18,7 @@ import { Outlet } from "react-router";
 import { useDashboard } from "../../context/DashboardContext";
 import CreateQuestion from "./questions/createQuestion";
 import CreateQuiz from "./quizzes/createQuiz";
+import CreateRoom from "./rooms/createRoom";
 
 export default function Dashboard() {
   const { activeTab, sidebarOpen, setSidebarOpen } = useDashboard();
@@ -26,6 +27,8 @@ export default function Dashboard() {
     switch (activeTab) {
       case "rooms":
         return <Room />;
+      case "createRoom":
+        return <CreateRoom />;
       case "quizzes":
         return <Quiz />;
       case "questions":
