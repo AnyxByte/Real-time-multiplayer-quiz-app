@@ -38,8 +38,7 @@ app.use("/api/user", userRouter);
 app.use("/api/question", auth, questionRouter);
 app.use("/api/talkToAI", auth, aiRouter);
 app.use("/api/quiz", auth, quizRouter);
-
-app.use("/api/room",auth , roomRouter );
+app.use("/api/room", auth, roomRouter);
 
 app.listen(PORT, () => {
   console.log("server listening to port ", PORT);

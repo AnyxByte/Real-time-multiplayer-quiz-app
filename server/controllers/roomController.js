@@ -46,6 +46,51 @@ export const createRoom = async (req, res) => {
   }
 };
 
-export const getRoom = (req, res) => {};
+export const getRoom = async (req, res) => {
+  try {
+    const userId = req.user.user.id;
 
-export const deleteRoom = (req, res) => {};
+    if (!userId) {
+      return res.status(400).json({
+        msg: "Unauthenticated",
+      });
+    }
+
+    const rooms = await Room.findOne({
+      createdBy: userId,
+    }).lean();
+
+    return res.status(200).json({
+      rooms,
+      msg: "rooms",
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
+
+export const deleteRoom = async (req, res) => {
+  try {
+    const roomId = req.params.id;
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(400).json({
+        msg: "room not found",
+      });
+    }
+
+    await Room.findByIdAndDelete(roomId);
+
+    return res.status(200).json({
+      msg: "successfully deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
