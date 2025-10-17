@@ -12,18 +12,42 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { useDashboard } from "@/context/DashboardContext";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function CreateRoom() {
   const [values, setValues] = useState(null);
   const [maxPlayers, setMaxPlayers] = useState("");
 
-  const { quizzes } = useDashboard();
+  const { quizzes, setActiveTab } = useDashboard();
 
   const options = quizzes.map((q) => ({
     title: q.title,
     value: q._id,
   }));
 
+  const handleCreateRoom = async () => {
+    const token = Cookies.get("token");
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    try {
+      const payload = {
+        quiz: values[0].value,
+        maxPlayers,
+      };
+      console.log(payload);
+
+      await axios.post(`${apiUrl}/room/create`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Created");
+      setActiveTab("rooms");
+    } catch (error) {
+      console.log(error, "error while creating room");
+    }
+  };
 
   return (
     <div className="-m-6 flex justify-center items-center min-h-screen">
@@ -71,7 +95,10 @@ export default function CreateRoom() {
         </CardContent>
 
         <CardFooter className="flex justify-center">
-          <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2">
+          <Button
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2"
+            onClick={handleCreateRoom}
+          >
             Create Room
           </Button>
         </CardFooter>

@@ -3,7 +3,9 @@ import { Room } from "../models/roomModel.js";
 
 export const createRoom = async (req, res) => {
   try {
-    const { createdBy, maxPlayers, quiz } = req.body;
+    const { maxPlayers, quiz } = req.body;
+
+    const createdBy = req.user.user.id;
 
     if (!createdBy || !maxPlayers || !quiz) {
       return res.status(400).json({
