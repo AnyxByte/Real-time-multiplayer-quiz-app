@@ -9,9 +9,9 @@ const DashboardContext = createContext(null);
 export const DashboardProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState("rooms");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [questions, setQuestions] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -23,14 +23,12 @@ export const DashboardProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
       setQuestions(response.data.questions);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const fetchQuizzes = async () => {
     const token = Cookies.get("token");
     try {
@@ -39,8 +37,23 @@ export const DashboardProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
       setQuizzes(response.data.quizzes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchRooms = async () => {
+    const token = Cookies.get("token");
+    try {
+      const response = await axios.get(`${apiUrl}/room`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data);
+      setRooms(response.data.rooms);
     } catch (error) {
       console.log(error);
     }
@@ -49,6 +62,7 @@ export const DashboardProvider = ({ children }) => {
   useEffect(() => {
     fetchQuestions();
     fetchQuizzes();
+    fetchRooms();
   }, []);
 
   return (
@@ -62,6 +76,8 @@ export const DashboardProvider = ({ children }) => {
         setQuestions,
         quizzes,
         setQuizzes,
+        rooms,
+        setRooms,
       }}
     >
       {children}

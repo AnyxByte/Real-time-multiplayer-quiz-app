@@ -37,13 +37,14 @@ export default function CreateRoom() {
       };
       console.log(payload);
 
-      await axios.post(`${apiUrl}/room/create`, payload, {
+      const response = await axios.post(`${apiUrl}/room/create`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       toast.success("Created");
       setActiveTab("rooms");
+      console.log(response.data, "response after creating room");
     } catch (error) {
       console.log(error, "error while creating room");
     }

@@ -58,9 +58,17 @@ export const getRoom = async (req, res) => {
       });
     }
 
-    const rooms = await Room.findOne({
+    const rooms = await Room.find({
       createdBy: userId,
-    }).lean();
+    })
+      .populate({
+        path: "quiz",
+        populate: {
+          path: "questions",
+          model: "Question",
+        },
+      })
+      .lean();
 
     return res.status(200).json({
       rooms,
