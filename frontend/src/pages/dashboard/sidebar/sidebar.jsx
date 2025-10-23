@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Home,
   Users,
@@ -7,7 +6,9 @@ import {
   Trophy,
   Settings,
 } from "lucide-react";
-import { useDashboard } from "../../../context/DashboardContext";
+import { useDashboard } from "@/context/DashboardContext";
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 const SidebarButton = ({ setActiveTab, activeTab, icon, title }) => {
   return (
@@ -24,6 +25,12 @@ const SidebarButton = ({ setActiveTab, activeTab, icon, title }) => {
 
 export default function Sidebar() {
   const { activeTab, setActiveTab } = useDashboard();
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    navigate("/login");
+    Cookies.remove("token");
+  };
 
   return (
     <aside className="w-64 h-full bg-gradient-to-b from-indigo-600 to-purple-600 text-white flex flex-col justify-between">
@@ -77,7 +84,7 @@ export default function Sidebar() {
 
       <div className="p-4">
         <button
-          onClick={() => console.log("Logout clicked")}
+          onClick={handleLogout}
           className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg hover:bg-indigo-500 transition"
         >
           <svg
