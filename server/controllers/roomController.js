@@ -1,3 +1,4 @@
+import { client } from "../handlers/redisHandler.js";
 import { Quiz } from "../models/quizModel.js";
 import { Room } from "../models/roomModel.js";
 
@@ -99,6 +100,64 @@ export const deleteRoom = async (req, res) => {
       msg: "successfully deleted",
     });
   } catch (error) {
+    res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
+
+export const joinRoom = async (req, res) => {
+  try {
+    const { roomId, roomCode } = req.body;
+
+    if (!roomId && !roomCode) {
+      return res.status(400).json({
+        msg: "Missing Fields",
+      });
+    }
+
+    const query = {};
+    if (roomCode) {
+      query.roomCode = roomCode;
+      const existsInRedis = await client.get(roomCode);
+
+      if (existsInRedis) {
+        const room = JSON.parse(existsInRedis);
+
+        return res.status(200).json({
+          msg: "already exists in redis",
+          room,
+        });
+      }
+    }
+    if (roomId) query._id = roomId;
+
+    // find in the redis , if yes return the response from there
+    // if not found , do db search and save it to redis
+
+    const room = await Room.findOne(query)
+      .populate({
+        path: "quiz",
+        populate: {
+          path: "questions",
+          model: "Question",
+        },
+      })
+      .lean();
+    if (!room) {
+      return res.status(400).json({
+        msg: "No such room",
+      });
+    }
+
+    await client.setEx(room.roomCode, 900, JSON.stringify(room));
+
+    return res.status(200).json({
+      room,
+      msg: "testing the room",
+    });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({
       msg: "server error",
     });

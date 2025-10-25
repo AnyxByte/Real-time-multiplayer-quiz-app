@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import { Server } from "socket.io";
 import { connectDb } from "./connectDb.js";
 import userRouter from "./routes/userRoute.js";
 import questionRouter from "./routes/questionRoute.js";
@@ -9,6 +10,8 @@ import roomRouter from "./routes/roomRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { auth } from "./middleware/auth.js";
+import { handleSocket } from "./handlers/socketHandler.js";
+import { client } from "./handlers/redisHandler.js";
 
 dotenv.config();
 
@@ -40,6 +43,22 @@ app.use("/api/talkToAI", auth, aiRouter);
 app.use("/api/quiz", auth, quizRouter);
 app.use("/api/room", auth, roomRouter);
 
-app.listen(PORT, () => {
+// http server
+const httpserver = app.listen(PORT, () => {
   console.log("server listening to port ", PORT);
 });
+
+// redis server
+client.on("error", (error) => console.log("redis client error", error));
+
+await client.connect();
+
+// websocket server
+
+const wss = new Server(httpserver, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+  },
+});
+
+handleSocket(wss);

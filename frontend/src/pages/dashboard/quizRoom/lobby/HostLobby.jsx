@@ -21,14 +21,15 @@ const HostLobby = () => {
             Players Joined
           </h2>
           <div className="flex flex-wrap justify-center gap-2">
-            {players.map((player, i) => (
-              <div
-                key={i}
-                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium shadow-sm"
-              >
-                {player}
-              </div>
-            ))}
+            {players.length > 0 &&
+              players.map((player, i) => (
+                <div
+                  key={i}
+                  className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium shadow-sm"
+                >
+                  {player}
+                </div>
+              ))}
           </div>
         </div>
 
