@@ -69,6 +69,7 @@ export const getRoom = async (req, res) => {
           model: "Question",
         },
       })
+      .select("-createdBy")
       .lean();
 
     return res.status(200).json({
