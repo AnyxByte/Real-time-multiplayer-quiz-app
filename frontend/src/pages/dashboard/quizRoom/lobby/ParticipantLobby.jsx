@@ -30,7 +30,7 @@ const ParticipantLobby = () => {
         </p>
 
         {/* Players Cloud */}
-        <div className="relative w-full flex flex-wrap justify-center gap-3 pt-4 pb-2 border-t border-white/20 max-h-[40vh] overflow-y-auto">
+        {/* <div className="relative w-full flex flex-wrap justify-center gap-3 pt-4 pb-2 border-t border-white/20 max-h-[40vh] overflow-y-auto">
           {players.map((name, i) => (
             <div
               key={i}
@@ -41,7 +41,7 @@ const ParticipantLobby = () => {
               {name}
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Footer small info */}
         <p className="text-xs text-white/60 mt-6">

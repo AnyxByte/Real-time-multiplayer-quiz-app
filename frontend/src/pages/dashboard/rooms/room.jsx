@@ -8,10 +8,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import JoinRoomCard from "./joinRoomCard";
+import { useNavigate } from "react-router";
 
 export default function Room() {
   const { setActiveTab, rooms } = useDashboard();
   const [openDialog, setOpenDialog] = useState(false);
+
+  const navigate = useNavigate();
 
   const addRoom = () => {
     setActiveTab("createRoom");
@@ -24,6 +27,7 @@ export default function Room() {
   const handleJoinRoom = async (payload) => {
     const token = Cookies.get("token");
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    const roomCode = payload.roomCode;
 
     try {
       console.log(payload, "payload");
@@ -32,6 +36,7 @@ export default function Room() {
           Authorization: `Bearer ${token}`,
         },
       });
+      navigate("/room", { state: roomCode });
       console.log(response.data);
     } catch (error) {
       console.log(error);
