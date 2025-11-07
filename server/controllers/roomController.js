@@ -123,11 +123,8 @@ export const joinRoom = async (req, res) => {
       const existsInRedis = await client.get(roomCode);
 
       if (existsInRedis) {
-        const room = JSON.parse(existsInRedis);
-
         return res.status(200).json({
-          msg: "already exists in redis",
-          room,
+          msg: "successfully joined the room",
         });
       }
     }
@@ -154,8 +151,7 @@ export const joinRoom = async (req, res) => {
     await client.setEx(room.roomCode, 900, JSON.stringify(room));
 
     return res.status(200).json({
-      room,
-      msg: "testing the room",
+      msg: "successfully joined the room",
     });
   } catch (error) {
     console.log(error);

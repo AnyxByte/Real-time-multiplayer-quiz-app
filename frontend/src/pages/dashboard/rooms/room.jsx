@@ -7,16 +7,6 @@ import { useDashboard } from "@/context/DashboardContext";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import JoinRoomCard from "./joinRoomCard";
 
 export default function Room() {
