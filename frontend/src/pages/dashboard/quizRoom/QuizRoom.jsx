@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ParticipantLobby from "./lobby/ParticipantLobby";
 import HostLobby from "./lobby/HostLobby";
 import RoomLeaderboard from "./roomLeaderboard/RoomLeaderboard";
@@ -12,17 +12,11 @@ export default function QuizRoom() {
   const token = Cookies.get("token");
   const [role, setRole] = useState("user");
   const [status, setStatus] = useState("waiting");
-
+  const [users, setUsers] = useState([]);
   const location = useLocation();
-
   const roomCode = location.state;
 
-  const socket = io(import.meta.env.VITE_WS_URL, {
-    auth: {
-      token: token,
-      roomCode,
-    },
-  });
+  const socketRef = useRef(null);
 
   const handleMsg = (msg) => {
     console.log(msg);
@@ -33,35 +27,54 @@ export default function QuizRoom() {
     setRole(msg);
   };
 
-  function startQuiz() {
-    // setStatus("running");
-    socket.emit("startQuiz");
-  }
-
   const handleQuizStart = (msg) => {
     console.log(msg);
     setStatus(msg);
   };
 
-  socket.on("status", handleQuizStart);
+  const handleUserJoin = (data) => {
+    setUsers((prev) => {
+      if (prev.includes(data.userName)) return prev;
+      return [...prev, data.userName];
+    });
+  };
 
   useEffect(() => {
-    socket.on("message", handleMsg);
+    const socket = io(import.meta.env.VITE_WS_URL, {
+      auth: {
+        token: token,
+        roomCode,
+      },
+    });
 
+    socketRef.current = socket;
+
+    socket.on("message", handleMsg);
     socket.on("role", handleRole);
+    socket.on("status", handleQuizStart);
+    socket.on("newUserJoined", handleUserJoin);
 
     return () => {
       socket.off("message", handleMsg);
+      socket.off("role", handleRole);
+      socket.off("status", handleQuizStart);
+      socket.off("newUserJoined", handleUserJoin);
     };
   }, []);
 
+  function startQuiz() {
+    socketRef.current.emit("startQuiz");
+  }
+
   const renderContent = () => {
     if (role === "admin" && status === "waiting") {
-      return <HostLobby startQuiz={startQuiz} />;
+      return (
+        <HostLobby startQuiz={startQuiz} players={users} roomCode={roomCode} />
+      );
     } else if (role === "user" && status === "waiting") {
-      return <ParticipantLobby />;
+      return <ParticipantLobby roomCode={roomCode} />;
     } else if (status === "in-progress") {
-      return <QuestionDisplay />;
+      return <RoomLeaderboard />;
     } else return <HostLobby startQuiz={startQuiz} />;
   };
 

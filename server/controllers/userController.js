@@ -71,6 +71,7 @@ export const handleLogin = async (req, res) => {
     const payload = {
       user: {
         id: existingUser.id,
+        name: existingUser.name,
       },
     };
 

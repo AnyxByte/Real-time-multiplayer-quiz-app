@@ -14,8 +14,7 @@ export const handleSocket = (wss) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const userId = decoded.user.id;
-
-      console.log(roomCode, "roomCode");
+      const userName = decoded.user.name;
 
       const roomDetails = await client.get(roomCode);
 
@@ -24,7 +23,13 @@ export const handleSocket = (wss) => {
 
       const isAdmin = userId === parsedRoomDetails.createdBy;
 
+      socket.join(roomCode);
+
       socket.emit("role", isAdmin ? "admin" : "user");
+
+      if (!isAdmin) {
+        wss.to(roomCode).emit("newUserJoined", { userId, userName });
+      }
 
       socket.on("startQuiz", () => {
         if (!isAdmin) {

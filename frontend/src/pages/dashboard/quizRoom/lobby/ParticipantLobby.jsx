@@ -1,8 +1,6 @@
 import React from "react";
 
-const ParticipantLobby = () => {
-  const players = ["Suprodip", "Arjun", "Priya", "Riya"];
-
+const ParticipantLobby = ({ roomCode }) => {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 text-white p-6">
       {/* Top: Logo / Title */}
@@ -16,7 +14,7 @@ const ParticipantLobby = () => {
         {/* Room Code Section */}
         <h2 className="text-xl font-medium opacity-80">Room Code</h2>
         <p className="text-6xl font-extrabold text-yellow-300 drop-shadow-sm tracking-[0.3em] my-3">
-          652223
+          {roomCode}
         </p>
 
         {/* Fun Waiting Animation */}

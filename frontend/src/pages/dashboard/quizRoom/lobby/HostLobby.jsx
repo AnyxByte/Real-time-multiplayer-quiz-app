@@ -1,9 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-const HostLobby = ({ startQuiz }) => {
-  const players = ["Suprodip", "Arjun", "Priya", "Riya"];
-
+const HostLobby = ({ startQuiz, players, roomCode }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 p-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6 text-center">
@@ -13,7 +11,7 @@ const HostLobby = ({ startQuiz }) => {
         {/* Room Code */}
         <p className="text-gray-500">Share this code with players:</p>
         <div className="text-4xl font-bold text-blue-600 tracking-widest mt-2 mb-4">
-          67284
+          {roomCode}
         </div>
 
         {/* Players List */}
