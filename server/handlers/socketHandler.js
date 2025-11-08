@@ -33,6 +33,8 @@ export const handleSocket = (wss) => {
       wss.emit("message", msg);
     } catch (error) {
       console.log(error);
+      socket.emit("error","Authentication Failed");
+      socket.disconnect();
     }
   });
 };

@@ -1,6 +1,7 @@
 import React from "react";
+import { Button } from "@/components/ui/button";
 
-const HostLobby = () => {
+const HostLobby = ({ startQuiz }) => {
   const players = ["Suprodip", "Arjun", "Priya", "Riya"];
 
   return (
@@ -34,9 +35,12 @@ const HostLobby = () => {
         </div>
 
         {/* Start Button */}
-        <button className="cursor-pointer mt-8 w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition active:scale-95">
+        <Button
+          className="mt-8 w-full bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition active:scale-95"
+          onClick={startQuiz}
+        >
           Start Game
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -11,10 +11,18 @@ import { useLocation } from "react-router";
 export default function QuizRoom() {
   const token = Cookies.get("token");
   const [role, setRole] = useState("user");
+  const [status, setStatus] = useState("waiting");
 
   const location = useLocation();
 
   const roomCode = location.state;
+
+  const socket = io(import.meta.env.VITE_WS_URL, {
+    auth: {
+      token: token,
+      roomCode,
+    },
+  });
 
   const handleMsg = (msg) => {
     console.log(msg);
@@ -25,14 +33,12 @@ export default function QuizRoom() {
     setRole(msg);
   };
 
-  useEffect(() => {
-    const socket = io(import.meta.env.VITE_WS_URL, {
-      auth: {
-        token: token,
-        roomCode,
-      },
-    });
+  function startQuiz() {
+    setStatus("running");
+    socket.emit("status", "start");
+  }
 
+  useEffect(() => {
     socket.on("message", handleMsg);
 
     socket.on("role", handleRole);
@@ -45,7 +51,7 @@ export default function QuizRoom() {
   const renderContent = () => {
     switch (role) {
       case "admin":
-        return <HostLobby />;
+        return <HostLobby startQuiz={startQuiz} />;
       case "user":
         return <ParticipantLobby />;
 
