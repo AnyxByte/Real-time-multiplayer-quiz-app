@@ -10,41 +10,53 @@ import { useLocation } from "react-router";
 
 export default function QuizRoom() {
   const token = Cookies.get("token");
+  const [role, setRole] = useState("user");
 
   const location = useLocation();
 
   const roomCode = location.state;
-  const socket = io(import.meta.env.VITE_WS_URL, {
-    auth: {
-      token: token,
-      roomCode,
-    },
-  });
-
-  // const [isAdmin, setIsAdmin] = useState(false);
-  // const [normalUser, setNormalUser] = useState(true);
 
   const handleMsg = (msg) => {
     console.log(msg);
   };
 
-  // const renderContent = () => {
-
-  // }
+  const handleRole = (msg) => {
+    console.log(msg, "role");
+    setRole(msg);
+  };
 
   useEffect(() => {
+    const socket = io(import.meta.env.VITE_WS_URL, {
+      auth: {
+        token: token,
+        roomCode,
+      },
+    });
+
     socket.on("message", handleMsg);
+
+    socket.on("role", handleRole);
 
     return () => {
       socket.off("message", handleMsg);
     };
   }, []);
 
+  const renderContent = () => {
+    switch (role) {
+      case "admin":
+        return <HostLobby />;
+      case "user":
+        return <ParticipantLobby />;
+
+      default:
+        return <ParticipantLobby />;
+    }
+  };
+
   return (
     <div>
-      <div className="h-screen w-full">
-        <ParticipantLobby />
-      </div>
+      <div className="h-screen w-full">{renderContent()}</div>
     </div>
   );
 }
