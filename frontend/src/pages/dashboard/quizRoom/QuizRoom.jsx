@@ -34,9 +34,16 @@ export default function QuizRoom() {
   };
 
   function startQuiz() {
-    setStatus("running");
-    socket.emit("status", "start");
+    // setStatus("running");
+    socket.emit("startQuiz");
   }
+
+  const handleQuizStart = (msg) => {
+    console.log(msg);
+    setStatus(msg);
+  };
+
+  socket.on("status", handleQuizStart);
 
   useEffect(() => {
     socket.on("message", handleMsg);
@@ -49,15 +56,13 @@ export default function QuizRoom() {
   }, []);
 
   const renderContent = () => {
-    switch (role) {
-      case "admin":
-        return <HostLobby startQuiz={startQuiz} />;
-      case "user":
-        return <ParticipantLobby />;
-
-      default:
-        return <ParticipantLobby />;
-    }
+    if (role === "admin" && status === "waiting") {
+      return <HostLobby startQuiz={startQuiz} />;
+    } else if (role === "user" && status === "waiting") {
+      return <ParticipantLobby />;
+    } else if (status === "in-progress") {
+      return <QuestionDisplay />;
+    } else return <HostLobby startQuiz={startQuiz} />;
   };
 
   return (

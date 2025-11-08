@@ -22,18 +22,26 @@ export const handleSocket = (wss) => {
       const parsedRoomDetails = JSON.parse(roomDetails);
       console.log(parsedRoomDetails, "roomDetails");
 
-      if (userId === parsedRoomDetails.createdBy) {
-        socket.emit("role", "admin");
-      } else {
-        socket.emit("role", "user");
-      }
+      const isAdmin = userId === parsedRoomDetails.createdBy;
+
+      socket.emit("role", isAdmin ? "admin" : "user");
+
+      socket.on("startQuiz", () => {
+        if (!isAdmin) {
+          socket.emit("error", "You aren't authorized");
+          return;
+        } else {
+          wss.emit("status", "in-progress");
+          console.log("starting quiz");
+        }
+      });
 
       //broadcast to everyone with message event including sender
       const msg = "hello from backend";
       wss.emit("message", msg);
     } catch (error) {
       console.log(error);
-      socket.emit("error","Authentication Failed");
+      socket.emit("error", "Authentication Failed");
       socket.disconnect();
     }
   });
