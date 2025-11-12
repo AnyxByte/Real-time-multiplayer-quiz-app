@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 
 const HostLobby = ({ startQuiz, players, roomCode }) => {
+  console.log(players, "players");
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 p-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6 text-center">

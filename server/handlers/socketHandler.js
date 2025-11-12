@@ -21,6 +21,17 @@ export const handleSocket = (wss) => {
       const parsedRoomDetails = JSON.parse(roomDetails);
       console.log(parsedRoomDetails, "roomDetails");
 
+      // console.log(parsedRoomDetails.quiz.questions, "questions");
+
+      const questions = parsedRoomDetails.quiz.questions.map((question) => {
+        return {
+          title: question.title,
+          options: question.options,
+        };
+      });
+
+      console.log(questions, "questions");
+
       const isAdmin = userId === parsedRoomDetails.createdBy;
 
       // if (isAdmin) {
@@ -28,12 +39,11 @@ export const handleSocket = (wss) => {
       // }
 
       socket.join(roomCode);
-      console.log(socket, "socket");
 
       socket.emit("role", isAdmin ? "admin" : "user");
 
       if (!isAdmin) {
-        wss.to(roomCode).emit("newUserJoined", { userId, userName });
+        socket.to(roomCode).emit("newUserJoined", { userId, userName });
       }
 
       socket.on("startQuiz", () => {
@@ -42,14 +52,22 @@ export const handleSocket = (wss) => {
 
           return;
         } else {
-          // socket.broadcast.to(roomCode).emit("status", "in-progress");
-          wss.to(roomCode).emit("status", "in-progress");
+          // questions ek saath bhej do ...
+          wss.to(roomCode).emit("status", {
+            status: "in-progress",
+            questions: questions,
+          });
+          const currTime = Date.now();
+          setTimeout(() => {
+            socket.to(roomCode).emit("time-up");
+          }, 10800);
         }
       });
     } catch (error) {
       console.log(error);
       socket.emit("error", "Authentication Failed");
       socket.disconnect();
+      console.log("socket disconnected");
     }
   });
 };

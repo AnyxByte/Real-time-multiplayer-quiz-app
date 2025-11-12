@@ -8,17 +8,30 @@ const QuestionDisplay = ({
   question = "Which planet is known as the Red Planet?",
   options = ["Earth", "Mars", "Jupiter"],
   duration = 10,
+  questions,
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const key = useRef(0);
+  const questionCount = useRef(1);
 
   const [isPlaying, setIsPlaying] = useState(true);
-  const [remainingTime, setRemainingTime] = useState(10);
+  // const [remainingTime, setRemainingTime] = useState(10);
+
+  const currTime = useRef(10);
+  const [currQuestion, setCurrQuestion] = useState(
+    questions[questionCount.current]
+  );
+
+  console.log(currQuestion, "currQuestion");
 
   const handleSubmit = () => {
-    setIsPlaying(false);
-    console.log(remainingTime);
+    // setIsPlaying(trues);
+    console.log(currTime.current);
+
+    setCurrQuestion(questions[questionCount.current++]);
   };
+
+  console.log(currQuestion, "currQuestion after updation");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 px-4">
@@ -33,7 +46,9 @@ const QuestionDisplay = ({
             colorsTime={[10, 6, 3, 0]}
             size={80}
             strokeWidth={8}
-            onUpdate={(remainingTime) => setRemainingTime(remainingTime)}
+            onUpdate={(remainingTime) => {
+              return (currTime.current = remainingTime);
+            }}
             onComplete={() => ({ shouldRepeat: false })}
           >
             {({ remainingTime }) => (
@@ -46,12 +61,12 @@ const QuestionDisplay = ({
 
         {/* Question */}
         <h2 className="text-xl font-semibold text-gray-800 mb-6">
-          {question || "Loading question..."}
+          {currQuestion.title || "Loading question..."}
         </h2>
 
         {/* Options */}
         <div className="space-y-3">
-          {options?.map((opt, idx) => (
+          {currQuestion.options?.map((opt, idx) => (
             <motion.button
               key={idx}
               whileHover={{ scale: 1.02 }}

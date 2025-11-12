@@ -17,6 +17,7 @@ export default function QuizRoom() {
   const roomCode = location.state;
 
   const socketRef = useRef(null);
+  const questions = useRef(null);
 
   const handleMsg = (msg) => {
     console.log(msg);
@@ -29,7 +30,8 @@ export default function QuizRoom() {
 
   const handleQuizStart = (msg) => {
     console.log(msg);
-    setStatus(msg);
+    setStatus(msg.status);
+    questions.current = msg.questions;
   };
 
   const handleUserJoin = (data) => {
@@ -59,6 +61,7 @@ export default function QuizRoom() {
       socket.off("role", handleRole);
       socket.off("status", handleQuizStart);
       socket.off("newUserJoined", handleUserJoin);
+      socket.disconnect();
     };
   }, []);
 
@@ -74,7 +77,7 @@ export default function QuizRoom() {
     } else if (role === "user" && status === "waiting") {
       return <ParticipantLobby roomCode={roomCode} />;
     } else if (status === "in-progress" && role === "user") {
-      return <QuestionDisplay />;
+      return <QuestionDisplay questions={questions.current} />;
     } else if (status === "in-progress" && role === "admin") {
       return <RoomLeaderboard />;
     } else return <HostLobby startQuiz={startQuiz} />;
