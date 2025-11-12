@@ -4,31 +4,19 @@ import { motion } from "framer-motion";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Button } from "@/components/ui/button";
 
-const QuestionDisplay = ({
-  question = "Which planet is known as the Red Planet?",
-  options = ["Earth", "Mars", "Jupiter"],
-  duration = 10,
-  questions,
-}) => {
+const QuestionDisplay = ({ duration = 10, questions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const key = useRef(0);
-  const questionCount = useRef(1);
-
-  const [isPlaying, setIsPlaying] = useState(true);
-  // const [remainingTime, setRemainingTime] = useState(10);
-
+  const questionCount = useRef(0);
   const currTime = useRef(10);
   const [currQuestion, setCurrQuestion] = useState(
     questions[questionCount.current]
   );
-
-  console.log(currQuestion, "currQuestion");
-
+  const [enabled, setEnabled] = useState(true);
   const handleSubmit = () => {
-    // setIsPlaying(trues);
     console.log(currTime.current);
 
-    setCurrQuestion(questions[questionCount.current++]);
+    setCurrQuestion(questions[++questionCount.current]);
   };
 
   console.log(currQuestion, "currQuestion after updation");
@@ -40,7 +28,7 @@ const QuestionDisplay = ({
         <div className="flex justify-center mb-6">
           <CountdownCircleTimer
             key={key.current}
-            isPlaying={isPlaying}
+            isPlaying={true}
             duration={duration}
             colors={["#4f46e5", "#facc15", "#f97316", "#ef4444"]}
             colorsTime={[10, 6, 3, 0]}
@@ -49,7 +37,7 @@ const QuestionDisplay = ({
             onUpdate={(remainingTime) => {
               return (currTime.current = remainingTime);
             }}
-            onComplete={() => ({ shouldRepeat: false })}
+            onComplete={() => (setEnabled(false), { shouldRepeat: false })}
           >
             {({ remainingTime }) => (
               <span className="text-lg font-semibold text-gray-800">
@@ -72,6 +60,7 @@ const QuestionDisplay = ({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setSelectedOption(idx)}
+              disabled={!enabled}
               className={`w-full text-left px-4 py-3 rounded-xl border transition-all
                 ${
                   selectedOption === idx
@@ -88,7 +77,7 @@ const QuestionDisplay = ({
         <div className="mt-8">
           <Button
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl"
-            disabled={selectedOption === null}
+            disabled={!enabled}
             onClick={handleSubmit}
           >
             Submit
