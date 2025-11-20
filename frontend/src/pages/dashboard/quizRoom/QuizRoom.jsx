@@ -15,9 +15,9 @@ export default function QuizRoom() {
   const [users, setUsers] = useState([]);
   const location = useLocation();
   const roomCode = location.state;
-
   const socketRef = useRef(null);
   const questions = useRef(null);
+  const [userScore, setUserScore] = useState(null);
 
   const handleMsg = (msg) => {
     console.log(msg);
@@ -41,6 +41,13 @@ export default function QuizRoom() {
     });
   };
 
+  const handleScoreUpdate = (data) => {
+    setUserScore((sUser) => [
+      ...sUser,
+      { userName: data.userName, score: data.scoreOfUser },
+    ]);
+  };
+
   useEffect(() => {
     const socket = io(import.meta.env.VITE_WS_URL, {
       auth: {
@@ -55,12 +62,14 @@ export default function QuizRoom() {
     socket.on("role", handleRole);
     socket.on("status", handleQuizStart);
     socket.on("newUserJoined", handleUserJoin);
+    socket.on("updateScore", handleScoreUpdate);
 
     return () => {
       socket.off("message", handleMsg);
       socket.off("role", handleRole);
       socket.off("status", handleQuizStart);
       socket.off("newUserJoined", handleUserJoin);
+      socket.off("updateScore", handleScoreUpdate);
       socket.disconnect();
     };
   }, []);
@@ -84,7 +93,7 @@ export default function QuizRoom() {
         />
       );
     } else if (status === "in-progress" && role === "admin") {
-      return <RoomLeaderboard />;
+      return <RoomLeaderboard score={userScore} />;
     } else return <HostLobby startQuiz={startQuiz} />;
   };
 

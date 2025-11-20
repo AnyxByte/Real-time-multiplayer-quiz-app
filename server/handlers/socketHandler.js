@@ -19,9 +19,6 @@ export const handleSocket = (wss) => {
       const roomDetails = await client.get(roomCode);
 
       const parsedRoomDetails = JSON.parse(roomDetails);
-      console.log(parsedRoomDetails, "roomDetails");
-
-      console.log(parsedRoomDetails.quiz.questions, "questions");
 
       const questions = parsedRoomDetails.quiz.questions.map((question) => {
         return {
@@ -31,13 +28,9 @@ export const handleSocket = (wss) => {
         };
       });
 
-      // console.log(questions, "questions");
+      const questionsWithAnswers = parsedRoomDetails.quiz.questions;
 
       const isAdmin = userId === parsedRoomDetails.createdBy;
-
-      // if (isAdmin) {
-      //   await client.setEx(roomCode, 900, socket.id);
-      // }
 
       socket.join(roomCode);
 
@@ -61,18 +54,31 @@ export const handleSocket = (wss) => {
           const currTime = Date.now();
           setTimeout(() => {
             socket.to(roomCode).emit("time-up");
+
+            // user after recieving time-up , can see get their scores
           }, 10800);
         }
       });
 
-      socket.on("answer", (data) => {
+      socket.on("answer", async (data) => {
+        let scoreOfUser = await client.get(userId);
+        scoreOfUser = scoreOfUser ? parseInt(scoreOfUser) : 0;
 
-        // check whether the user has given correct answer or not , if yes assign him points ...
+        const question = questionsWithAnswers.find((q) => q._id === data.id);
 
+        const correctAns =
+          question.options[question.ansIndex - 1] === data.option;
 
-
-
-
+        if (correctAns) {
+          scoreOfUser = scoreOfUser + 10 + data.duration;
+          socket.to(roomCode).emit("updateScore", {
+            userName,
+            scoreOfUser,
+          });
+          await client.setEx(userId, 600, String(scoreOfUser));
+        } else {
+          console.log("false");
+        }
       });
     } catch (error) {
       console.log(error);
