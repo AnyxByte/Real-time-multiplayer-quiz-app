@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Button } from "@/components/ui/button";
 
-const QuestionDisplay = ({ duration = 10, questions }) => {
+const QuestionDisplay = ({ duration = 10, questions, socket }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const key = useRef(0);
   const questionCount = useRef(0);
@@ -12,12 +12,27 @@ const QuestionDisplay = ({ duration = 10, questions }) => {
   const [currQuestion, setCurrQuestion] = useState(
     questions[questionCount.current]
   );
+
+  const [answers, setAnswers] = useState([]);
   const [enabled, setEnabled] = useState(true);
   const handleSubmit = () => {
     console.log(currTime.current);
-
     setCurrQuestion(questions[++questionCount.current]);
   };
+
+  const handleClickSubmitButton = (opt) => {
+    // const payload = {};
+
+    setAnswers((ans) => [
+      ...ans,
+      {
+        title: currQuestion.title,
+        option: opt,
+      },
+    ]);
+  };
+
+  console.log(answers, "answers");
 
   console.log(currQuestion, "currQuestion after updation");
 
@@ -59,11 +74,14 @@ const QuestionDisplay = ({ duration = 10, questions }) => {
               key={idx}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setSelectedOption(idx)}
+              onClick={() => {
+                setSelectedOption(opt);
+                handleClickSubmitButton(opt);
+              }}
               disabled={!enabled}
               className={`w-full text-left px-4 py-3 rounded-xl border transition-all
                 ${
-                  selectedOption === idx
+                  selectedOption === opt
                     ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
                     : "bg-white/90 hover:bg-indigo-50 border-gray-200"
                 }`}

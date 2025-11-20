@@ -21,16 +21,17 @@ export const handleSocket = (wss) => {
       const parsedRoomDetails = JSON.parse(roomDetails);
       console.log(parsedRoomDetails, "roomDetails");
 
-      // console.log(parsedRoomDetails.quiz.questions, "questions");
+      console.log(parsedRoomDetails.quiz.questions, "questions");
 
       const questions = parsedRoomDetails.quiz.questions.map((question) => {
         return {
+          id: question._id,
           title: question.title,
           options: question.options,
         };
       });
 
-      console.log(questions, "questions");
+      // console.log(questions, "questions");
 
       const isAdmin = userId === parsedRoomDetails.createdBy;
 
@@ -62,6 +63,16 @@ export const handleSocket = (wss) => {
             socket.to(roomCode).emit("time-up");
           }, 10800);
         }
+      });
+
+      socket.on("answer", (data) => {
+
+        // check whether the user has given correct answer or not , if yes assign him points ...
+
+
+
+
+
       });
     } catch (error) {
       console.log(error);

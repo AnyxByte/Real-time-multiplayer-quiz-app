@@ -77,7 +77,12 @@ export default function QuizRoom() {
     } else if (role === "user" && status === "waiting") {
       return <ParticipantLobby roomCode={roomCode} />;
     } else if (status === "in-progress" && role === "user") {
-      return <QuestionDisplay questions={questions.current} />;
+      return (
+        <QuestionDisplay
+          questions={questions.current}
+          socket={socketRef.current}
+        />
+      );
     } else if (status === "in-progress" && role === "admin") {
       return <RoomLeaderboard />;
     } else return <HostLobby startQuiz={startQuiz} />;
