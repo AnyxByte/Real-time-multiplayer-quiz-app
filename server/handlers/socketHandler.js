@@ -47,16 +47,19 @@ export const handleSocket = (wss) => {
           return;
         } else {
           // questions ek saath bhej do ...
+          const startTime = Date.now() + 2000;
+          wss.to(roomCode).emit("startTime", { startTime });
+
           wss.to(roomCode).emit("status", {
             status: "in-progress",
             questions: questions,
           });
-          const currTime = Date.now();
-          setTimeout(() => {
-            socket.to(roomCode).emit("time-up");
 
+          const duration = 32300;
+          setTimeout(() => {
+            wss.to(roomCode).emit("time-up");
             // user after recieving time-up , can see get their scores
-          }, 10800);
+          }, duration);
         }
       });
 
@@ -74,10 +77,18 @@ export const handleSocket = (wss) => {
           socket.to(roomCode).emit("updateScore", {
             userName,
             scoreOfUser,
+            id: userId,
           });
           await client.setEx(userId, 600, String(scoreOfUser));
         } else {
           console.log("false");
+        }
+      });
+
+      socket.on("leaderboard", (data) => {
+        if (isAdmin) {
+          console.log(data);
+          wss.to(roomCode).emit("leaderboard", { score: data.score });
         }
       });
     } catch (error) {

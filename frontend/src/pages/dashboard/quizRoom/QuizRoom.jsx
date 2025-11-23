@@ -17,10 +17,30 @@ export default function QuizRoom() {
   const roomCode = location.state;
   const socketRef = useRef(null);
   const questions = useRef(null);
-  const [userScore, setUserScore] = useState(null);
+  const [userScore, setUserScore] = useState([]);
+  const startTime = useRef(0);
+  const [timeUp, setTimeUp] = useState(false);
+  const playerScore = useRef(null);
+  const [leaderboard, setLeaderBoard] = useState([]);
 
   const handleMsg = (msg) => {
     console.log(msg);
+  };
+
+  const handleScoresOfUsers = (data) => {
+    console.log(data, "leaderboard of users ");
+    setLeaderBoard(data.score);
+  };
+
+  const handleTimeUp = () => {
+    // playerScore.current = userScore;
+    setTimeUp(true);
+    socketRef.current.emit("leaderboard", { score: playerScore.current });
+  };
+
+  const handleStartTime = (data) => {
+    startTime.current = data.startTime;
+    console.log(startTime.current);
   };
 
   const handleRole = (msg) => {
@@ -42,10 +62,22 @@ export default function QuizRoom() {
   };
 
   const handleScoreUpdate = (data) => {
-    setUserScore((sUser) => [
-      ...sUser,
-      { userName: data.userName, score: data.scoreOfUser },
-    ]);
+    console.log(data);
+
+    setUserScore((previousScore) => {
+      const exists = previousScore.find((u) => u.id === data.id);
+
+      if (exists) {
+        return previousScore.map((p) => {
+          return p.id === data.id ? { ...p, score: data.scoreOfUser } : p;
+        });
+      }
+
+      return [
+        ...previousScore,
+        { userName: data.userName, score: data.scoreOfUser, id: data.id },
+      ];
+    });
   };
 
   useEffect(() => {
@@ -63,6 +95,9 @@ export default function QuizRoom() {
     socket.on("status", handleQuizStart);
     socket.on("newUserJoined", handleUserJoin);
     socket.on("updateScore", handleScoreUpdate);
+    socket.on("startTime", handleStartTime);
+    socket.on("time-up", handleTimeUp);
+    socket.on("leaderboard", handleScoresOfUsers);
 
     return () => {
       socket.off("message", handleMsg);
@@ -70,9 +105,16 @@ export default function QuizRoom() {
       socket.off("status", handleQuizStart);
       socket.off("newUserJoined", handleUserJoin);
       socket.off("updateScore", handleScoreUpdate);
+      socket.off("startTime", handleStartTime);
+      socket.off("time-up", handleTimeUp);
+      socket.on("leaderboard", handleScoresOfUsers);
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    playerScore.current = userScore;
+  }, [userScore]);
 
   function startQuiz() {
     socketRef.current.emit("startQuiz");
@@ -85,16 +127,19 @@ export default function QuizRoom() {
       );
     } else if (role === "user" && status === "waiting") {
       return <ParticipantLobby roomCode={roomCode} />;
-    } else if (status === "in-progress" && role === "user") {
+    } else if (status === "in-progress" && role === "user" && !timeUp) {
       return (
         <QuestionDisplay
           questions={questions.current}
           socket={socketRef.current}
+          startTime={startTime.current}
         />
       );
     } else if (status === "in-progress" && role === "admin") {
-      return <RoomLeaderboard score={userScore} />;
-    } else return <HostLobby startQuiz={startQuiz} />;
+      return <RoomLeaderboard players={userScore} />;
+    } else if (timeUp) {
+      return <RoomLeaderboard players={leaderboard} />;
+    }
   };
 
   return (

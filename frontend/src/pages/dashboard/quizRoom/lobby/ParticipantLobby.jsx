@@ -1,5 +1,3 @@
-import React from "react";
-
 const ParticipantLobby = ({ roomCode }) => {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 text-white p-6">
