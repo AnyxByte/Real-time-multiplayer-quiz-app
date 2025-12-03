@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { client } from "./redisHandler.js";
+import { Score } from "../models/scoreModel.js";
 
 export const handleSocket = (wss) => {
   wss.on("connection", async (socket) => {
@@ -85,10 +86,18 @@ export const handleSocket = (wss) => {
         }
       });
 
-      socket.on("leaderboard", (data) => {
+      socket.on("leaderboard", async (data) => {
         if (isAdmin) {
-          console.log(data);
+          console.log(data.score);
           wss.to(roomCode).emit("leaderboard", { score: data.score });
+
+          const userScore = data.score;
+          for (const user of userScore) {
+            await Score.create({
+              userId: user.id,
+              score: user.score,
+            });
+          }
         }
       });
     } catch (error) {
