@@ -43,7 +43,7 @@ app.use("/api/question", auth, questionRouter);
 app.use("/api/talkToAI", auth, aiRouter);
 app.use("/api/quiz", auth, quizRouter);
 app.use("/api/room", auth, roomRouter);
-app.use("/api/quiz", auth, scoreRouter);
+app.use("/api/score", auth, scoreRouter);
 
 // http server
 const httpserver = app.listen(PORT, () => {

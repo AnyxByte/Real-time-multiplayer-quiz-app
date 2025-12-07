@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import DisplayQuiz from "./displayQuiz";
-import { useDashboard } from "@/context/DashboardContext";
+import { useDashboard } from "@/context/dashboardContext";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import axios from "axios";

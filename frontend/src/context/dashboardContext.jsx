@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 
-const DashboardContext = createContext(null);
+const dashboardContext = createContext(null);
 
 export const DashboardProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState("rooms");
@@ -12,6 +12,7 @@ export const DashboardProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [scores, setScores] = useState([]);
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -59,14 +60,31 @@ export const DashboardProvider = ({ children }) => {
     }
   };
 
+  const handleFetchScores = async () => {
+    const token = Cookies.get("token");
+    try {
+      const response = await axios.get(`${apiUrl}/score`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data);
+      setScores(response.data.scores);
+    } catch (err) {
+      console.log("error at handleFetchScore", err);
+    }
+  };
+
   useEffect(() => {
     fetchQuestions();
     fetchQuizzes();
     fetchRooms();
+    handleFetchScores();
   }, []);
 
   return (
-    <DashboardContext.Provider
+    <dashboardContext.Provider
       value={{
         activeTab,
         setActiveTab,
@@ -78,12 +96,13 @@ export const DashboardProvider = ({ children }) => {
         setQuizzes,
         rooms,
         setRooms,
+        scores,
       }}
     >
       {children}
-    </DashboardContext.Provider>
+    </dashboardContext.Provider>
   );
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useDashboard = () => useContext(DashboardContext);
+export const useDashboard = () => useContext(dashboardContext);

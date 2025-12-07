@@ -1,4 +1,4 @@
-import { useDashboard } from "@/context/DashboardContext";
+import { useDashboard } from "@/context/dashboardContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

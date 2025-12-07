@@ -15,7 +15,7 @@ import Leaderboard from "./leaderboard/leaderboard";
 import DashboardSettings from "./settings/settings";
 import Sidebar from "./sidebar/sidebar";
 import { Outlet } from "react-router";
-import { useDashboard } from "../../context/DashboardContext";
+import { useDashboard } from "../../context/dashboardContext";
 import CreateQuestion from "./questions/createQuestion";
 import CreateQuiz from "./quizzes/createQuiz";
 import CreateRoom from "./rooms/createRoom";

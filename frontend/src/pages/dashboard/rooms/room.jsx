@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ParticipantLobby from "../quizRoom/lobby/ParticipantLobby";
 import { Plus } from "lucide-react";
-import { useDashboard } from "@/context/DashboardContext";
+import { useDashboard } from "@/context/dashboardContext";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";

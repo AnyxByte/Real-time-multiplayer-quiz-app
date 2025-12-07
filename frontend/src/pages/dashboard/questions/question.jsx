@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
-import { useDashboard } from "@/context/DashboardContext";
+import { useDashboard } from "@/context/dashboardContext";
 import DisplayQuestion from "./displayQuestion";
 import { Button } from "@/components/ui/button";
 import axios from "axios";

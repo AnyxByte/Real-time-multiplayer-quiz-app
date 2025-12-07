@@ -8,7 +8,7 @@ import Login from "./pages/login/login.jsx";
 import Signup from "./pages/signup/signup.jsx";
 import App from "./App.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
-import { DashboardProvider } from "./context/DashboardContext.jsx";
+import { DashboardProvider } from "./context/dashboardContext.jsx";
 import { Toaster } from "sonner";
 import QuizRoom from "./pages/dashboard/quizRoom/QuizRoom.jsx";
 

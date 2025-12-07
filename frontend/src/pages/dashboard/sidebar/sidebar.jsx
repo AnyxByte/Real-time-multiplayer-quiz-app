@@ -6,7 +6,7 @@ import {
   Trophy,
   Settings,
 } from "lucide-react";
-import { useDashboard } from "@/context/DashboardContext";
+import { useDashboard } from "@/context/dashboardContext";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 
