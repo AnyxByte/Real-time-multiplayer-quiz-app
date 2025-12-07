@@ -93,10 +93,21 @@ export const handleSocket = (wss) => {
 
           const userScore = data.score;
           for (const user of userScore) {
-            await Score.create({
-              userId: user.id,
-              score: user.score,
+            const userFound = await Score.findOne({
+              _id: user.id,
             });
+
+            if (userFound) {
+              await Score.findByIdAndUpdate(user.id, {
+                score: user.score,
+              });
+            } else {
+              await Score.create({
+                userId: user.id,
+                score: user.score,
+                username: user.userName,
+              });
+            }
           }
         }
       });

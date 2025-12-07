@@ -9,6 +9,10 @@ const scoreSchema = new mongoose.Schema({
     required: true,
     type: Number,
   },
+  username: {
+    type: String,
+    required: true,
+  },
 });
 
 export const Score = mongoose.model("Score", scoreSchema);
