@@ -20,7 +20,7 @@ export default function CreateRoom() {
   const [values, setValues] = useState(null);
   const [maxPlayers, setMaxPlayers] = useState("");
 
-  const { quizzes, setActiveTab } = useDashboard();
+  const { quizzes, setActiveTab, fetchRooms } = useDashboard();
 
   const options = quizzes.map((q) => ({
     title: q.title,
@@ -43,6 +43,7 @@ export default function CreateRoom() {
         },
       });
       toast.success("Created");
+      fetchRooms();
       setActiveTab("rooms");
       console.log(response.data, "response after creating room");
     } catch (error) {

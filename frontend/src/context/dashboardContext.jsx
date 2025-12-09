@@ -52,8 +52,6 @@ export const DashboardProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log(response.data);
       setRooms(response.data.rooms);
     } catch (error) {
       console.log(error);
@@ -68,8 +66,6 @@ export const DashboardProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log(response.data);
       setScores(response.data.scores);
     } catch (err) {
       console.log("error at handleFetchScore", err);
@@ -97,6 +93,7 @@ export const DashboardProvider = ({ children }) => {
         rooms,
         setRooms,
         scores,
+        fetchRooms,
       }}
     >
       {children}
