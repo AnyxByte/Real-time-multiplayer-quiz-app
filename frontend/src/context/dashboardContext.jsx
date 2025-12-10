@@ -12,7 +12,6 @@ export const DashboardProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [scores, setScores] = useState([]);
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -58,25 +57,10 @@ export const DashboardProvider = ({ children }) => {
     }
   };
 
-  const handleFetchScores = async () => {
-    const token = Cookies.get("token");
-    try {
-      const response = await axios.get(`${apiUrl}/score`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setScores(response.data.scores);
-    } catch (err) {
-      console.log("error at handleFetchScore", err);
-    }
-  };
-
   useEffect(() => {
     fetchQuestions();
     fetchQuizzes();
     fetchRooms();
-    handleFetchScores();
   }, []);
 
   return (
@@ -92,7 +76,6 @@ export const DashboardProvider = ({ children }) => {
         setQuizzes,
         rooms,
         setRooms,
-        scores,
         fetchRooms,
       }}
     >

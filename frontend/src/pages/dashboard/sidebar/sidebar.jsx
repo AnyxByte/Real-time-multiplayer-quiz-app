@@ -66,14 +66,6 @@ export default function Sidebar() {
               <SidebarButton
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                icon={<Trophy size={18} />}
-                title={"leaderboard"}
-              />
-            </li>
-            <li>
-              <SidebarButton
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
                 icon={<Settings size={18} />}
                 title={"settings"}
               />

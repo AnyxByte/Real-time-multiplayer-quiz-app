@@ -11,7 +11,6 @@ import {
 import Room from "./rooms/room";
 import Quiz from "./quizzes/quiz";
 import Question from "./questions/question";
-import Leaderboard from "./leaderboard/leaderboard";
 import DashboardSettings from "./settings/settings";
 import Sidebar from "./sidebar/sidebar";
 import { Outlet } from "react-router";
@@ -37,8 +36,6 @@ export default function Dashboard() {
         return <CreateQuestion />;
       case "createQuiz":
         return <CreateQuiz />;
-      case "leaderboard":
-        return <Leaderboard />;
       case "settings":
         return <DashboardSettings />;
       default:
